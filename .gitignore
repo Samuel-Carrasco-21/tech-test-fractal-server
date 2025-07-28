@@ -1,0 +1,23 @@
+# Node dependencies (required)
+/node_modules
+
+# Build directory (required)
+/dist
+
+# To have own vscode config on project
+/.vscode
+
+# Enviorment variables (required)
+.env
+
+# Local files
+*.local
+
+# Log directory
+**/logs/
+
+# eslint cache
+.eslintcache
+
+# Prevent migration submission
+prisma/migrations/
