@@ -29,7 +29,7 @@ router.get('/:id', productController.getProductById.bind(productController));
 // POST /products -> Crear un nuevo producto
 router.post('/', productController.createProduct.bind(productController));
 
-// PATCH /products/:id -> Actualizar un producto existente (PATCH es ideal para actualizaciones parciales)
+// PATCH /products/:id -> Actualizar un producto existente
 router.patch('/:id', productController.updateProduct.bind(productController));
 
 // DELETE /products/:id -> Eliminar un producto

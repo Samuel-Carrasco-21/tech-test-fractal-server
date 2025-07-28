@@ -9,7 +9,7 @@ const router = Router();
 
 // 1. Instanciar los Repositorios
 const orderRepository = new OrderRepository();
-const productRepository = new ProductRepository(); // Necesario para el OrderService
+const productRepository = new ProductRepository();
 
 // 2. Instanciar el Servicio, inyectando todas sus dependencias
 const orderService = new OrderService(orderRepository, productRepository);

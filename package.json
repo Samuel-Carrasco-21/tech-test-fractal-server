@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "./dist/src/index.js",
   "scripts": {
-    "start": "node -r module-alias/register dist/src/index.js || echo 'Build not found. Run > npm run build'",
+    "start": "node dist/src/index.js || echo 'Build not found. Run > npm run build'",
     "start:prod": "npx prisma migrate deploy && node dist/src/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
     "lint": "eslint ./src",

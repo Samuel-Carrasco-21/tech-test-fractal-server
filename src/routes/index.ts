@@ -4,6 +4,7 @@ import orderRoutes from './order.routes';
 
 const router = Router();
 
+router.get('/', (_req, res) => res.send({ message: 'API is up!' }));
 router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 

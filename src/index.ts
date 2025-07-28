@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import { envs } from './config';
 import app from './app';
 import { logger } from './shared/utils';
