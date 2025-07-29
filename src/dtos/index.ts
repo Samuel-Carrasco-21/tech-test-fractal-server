@@ -1,3 +1,4 @@
+import { UpdateOrderItemsDTO } from './update-order-items.dto';
 import { CreateOrderDTO } from './create-order.dto';
 import { CreateProductDTO } from './create-product.dto';
 import { OrderItemResponseDTO } from './order-item-response.dto';
@@ -18,4 +19,5 @@ export {
   ProductResponseDTO,
   UpdateOrderDTO,
   UpdateProductDTO,
+  UpdateOrderItemsDTO,
 };

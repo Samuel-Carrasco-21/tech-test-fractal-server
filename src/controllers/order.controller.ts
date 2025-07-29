@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { controllerHandler } from '../errors/handlers';
 import { logger } from '../shared/utils';
 import { BadRequest, NotFound } from '../errors/utils';
-import { CreateOrderDTO, UpdateOrderDTO } from '../dtos';
+import { CreateOrderDTO, UpdateOrderDTO, UpdateOrderItemsDTO } from '../dtos';
 import { OrderService } from '../services/order.service';
 import { commonSuccessHandler } from '../shared/handlers/commonSuccessHandler';
 
@@ -61,6 +61,47 @@ export class OrderController {
         'Pedido creado exitosamente',
         log,
         StatusCodes.CREATED,
+        data,
+        res
+      );
+    } catch (error) {
+      controllerHandler(error, log, next);
+    } finally {
+      logger.info(log + 'end');
+    }
+  }
+
+  public async updateOrder(req: Request, res: Response, next: NextFunction) {
+    const log = 'orderController:updateOrder::';
+    logger.info(log + 'init');
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return next(BadRequest('El ID del pedido es requerido'));
+      }
+
+      const dto = req.body as UpdateOrderItemsDTO;
+
+      if (!dto.orderNumber && !dto.items) {
+        return next(
+          BadRequest(
+            'Se requiere al menos un campo para actualizar (orderNumber o items).'
+          )
+        );
+      }
+
+      const data = await this.orderService.updateOrder(id, dto);
+
+      if (!data) {
+        return next(
+          NotFound(`Pedido con ID ${id} no encontrado o no se pudo actualizar`)
+        );
+      }
+
+      commonSuccessHandler(
+        'Pedido actualizado exitosamente',
+        log,
+        StatusCodes.OK,
         data,
         res
       );

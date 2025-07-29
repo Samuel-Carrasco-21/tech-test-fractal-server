@@ -6,9 +6,11 @@ import {
   OrderItemResponseDTO,
   CreateOrderDTO,
   UpdateOrderDTO,
+  UpdateOrderItemsDTO,
 } from '../dtos';
 import { IOrderRepository, IProductRepository } from '../interfaces';
 import { OrderModel } from '../models';
+import { OrderStatusEnum } from '../enums/orders';
 
 export class OrderService {
   constructor(
@@ -112,6 +114,62 @@ export class OrderService {
 
       // 4. Devolver la vista detallada del pedido recién creado
       return this.getOrderById(createdOrder.id);
+    } catch (error) {
+      serviceHandler(error, log);
+      return null;
+    } finally {
+      logger.info(log + 'end');
+    }
+  }
+
+  public async updateOrder(
+    id: string,
+    dto: UpdateOrderItemsDTO
+  ): Promise<SingleOrderResponseDTO | null> {
+    const log = 'orderService:updateOrder::';
+    logger.info(log + 'init');
+    try {
+      const orderModel = await this.orderRepository.getById(id);
+      if (!orderModel) {
+        logger.warn(log + `Pedido con id ${id} no encontrado para actualizar.`);
+        return null;
+      }
+
+      if (orderModel.status === OrderStatusEnum.COMPLETED) {
+        throw new Error(
+          'No se puede modificar un pedido que ya ha sido completado.'
+        );
+      }
+      if (typeof dto.orderNumber === 'string') {
+        orderModel.orderNumber = dto.orderNumber;
+      }
+
+      if (dto.items) {
+        orderModel.items = [];
+
+        for (const itemDto of dto.items) {
+          const product = await this.productRepository.getById(
+            itemDto.productId
+          );
+          if (!product) {
+            throw new Error(
+              `Producto con ID ${itemDto.productId} no existe y no se puede añadir al pedido.`
+            );
+          }
+          orderModel.addProduct(product, itemDto.quantity);
+        }
+      }
+
+      const updatedOrder = await this.orderRepository.update(id, orderModel);
+
+      if (!updatedOrder) {
+        throw new Error(
+          'La actualización del pedido falló en la capa de persistencia.'
+        );
+      }
+
+      logger.info(log + `Pedido actualizado con id: ${id}`);
+      return this.getOrderById(updatedOrder.id);
     } catch (error) {
       serviceHandler(error, log);
       return null;
