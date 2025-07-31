@@ -88,6 +88,7 @@ export class OrderRepository implements IOrderRepository {
       const newOrderId = await prisma.$transaction(async tx => {
         const order = await tx.order.create({
           data: {
+            id: data.id,
             orderNumber: data.orderNumber,
             date: data.date,
             status: data.status,
@@ -96,6 +97,7 @@ export class OrderRepository implements IOrderRepository {
         if (data.items.length > 0) {
           await tx.orderItem.createMany({
             data: data.items.map(item => ({
+              id: item.id,
               orderId: order.id,
               productId: item.productId,
               quantity: item.quantity,

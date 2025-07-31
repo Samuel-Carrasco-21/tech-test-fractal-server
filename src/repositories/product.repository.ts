@@ -66,6 +66,7 @@ export class ProductRepository implements IProductRepository {
     try {
       const newProduct = await prisma.product.create({
         data: {
+          id: data.id,
           name: data.name,
           unitPrice: data.unitPrice,
         },
